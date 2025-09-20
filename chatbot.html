@@ -1,0 +1,123 @@
+<!-- minimum code to set up react -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lexis - Your Personal Chatbot</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+  <!-- container for react -->
+  <div class="js-container"></div>
+    <!-- loading react external library -->
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <!-- loading babel external library -->
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel"> //allows html code in js, translates jsx to js
+      function ChatInput(props) {
+        const [input, setInput] = React.useState("");
+        return (
+          <form className="chat-input" onSubmit={e => {
+            e.preventDefault();
+            if (input.trim()) {
+              props.onSend(input);
+              setInput("");
+            }
+          }}>
+            <input
+              type="text"
+              placeholder="Send a message to Lexis"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              size="30"
+            />
+            <button type="submit">Send</button>
+          </form>
+        );
+      }
+
+      function ChatMessages(props) {
+        const messagesEndRef = React.useRef(null);
+        React.useEffect(() => {
+          if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+          }
+        }, [props.messages]);
+        return (
+          <div className="messages">
+            {props.messages.map((msg, idx) => (
+              <div
+                className={`message message-${msg.sender}`}
+                key={idx}
+                style={{ justifyContent: msg.sender === "user" ? "flex-end" : "flex-start" }}
+              >
+                {msg.sender === "bot" && <img src="./robot.png" alt="Bot" />}
+                <div className="message-bubble">
+                  {msg.text}
+                </div>
+                {msg.sender === "user" && <img src="./user.png" alt="User" />}
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+        );
+      }
+
+      function App() {
+        const [messages, setMessages] = React.useState([
+          { sender: "bot", text: "Hello! I'm Lexis. How can I help you today?" }
+        ]);
+
+        function getBotResponse(text) {
+          const lower = text.toLowerCase();
+          if (lower.includes("date")) {
+            return "Today's date is September 20, 2025.";
+          } else if (lower.includes("flip") && lower.includes("coin")) {
+            return Math.random() < 0.5 ? "You got heads." : "You got tails.";
+          } else if (lower.includes("hello") || lower.includes("hi")) {
+            return "Hello! How can I help you today?";
+          } else if (lower.includes("name")) {
+            return "I'm Lexis, your chatbot assistant.";
+          } else if (lower.includes("weather")) {
+            return "The weather is sunny and pleasant today.";
+          } else if (lower.includes("capital of ghana")) {
+            return "The capital of Ghana is Accra.";
+          } else if (lower.includes("joke")) {
+            return "Why did the computer go to the doctor? Because it had a virus!";
+          } else if (lower.includes("time")) {
+            return "It's always a good time to learn React!";
+          } else if (lower.includes("color")) {
+            return "My favorite color is blue.";
+          } else {
+            return `You: ${text}`;
+          }
+        }
+
+        function handleSend(text) {
+          setMessages(msgs => [
+            ...msgs,
+            { sender: "user", text },
+          ]);
+          setTimeout(() => {
+            setMessages(msgs => [
+              ...msgs,
+              { sender: "bot", text: getBotResponse(text) }
+            ]);
+          }, 400);
+        }
+
+        return (
+          <div className="chatbot-container">
+            <h2 style={{textAlign: "center", margin: "16px 0 0 0"}}>Lexis Chatbot</h2>
+            <ChatMessages messages={messages} />
+            <ChatInput onSend={handleSend} />
+          </div>
+        );
+      }
+
+  const container = document.querySelector('.js-container');
+  ReactDOM.createRoot(container).render(<App />);
+    </script>
+  </body>
+</html>

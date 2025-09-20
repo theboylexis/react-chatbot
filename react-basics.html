@@ -1,0 +1,31 @@
+<!-- minimum code to set up react -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+  </head>
+  <body>
+    <!-- container for react -->
+    <div class="js-container"></div>
+    <!-- loading react external library -->
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <!-- loading babel external library -->
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel"> //allows html code in js, translates jsx to js
+    const button = <button className="spaced-btn">Hello</button>;
+    const paragraph = <p className="spaced-paragraph">I finally started my React journey lol!</p>;
+    const div = (
+      <div>
+        <p className="spaced-p">Starting my React journey in {3**2} days!</p>
+        <button className="spaced-btn">Read More</button>
+      </div>
+    );
+
+        // setting up react
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(div);
+    </script>
+  </body>
+</html>
